@@ -1,17 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// 关于登录的状态共享
+import { loginAbout } from '@/store/login.js'
 
 Vue.use(Vuex)
 
-const countAbout = {
-  state: {},
-  actions: {},
-  mutations: {},
-  getters: {},
-}
-
 export default new Vuex.Store({
   modules: {
-    countAbout,
+    loginAbout,
   },
 })

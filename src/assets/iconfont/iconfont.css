@@ -1,0 +1,138 @@
+@font-face {
+  font-family: 'shequ'; /* Project id 2824526 */
+  src: url('./fonts/iconfont.woff2?t=1634746428828') format('woff2'),
+    url('./fonts/iconfont.woff?t=1634746428828') format('woff'),
+    url('./fonts/iconfont.ttf?t=1634746428828') format('truetype');
+}
+
+.shequ {
+  font-family: 'shequ' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.shequ-saoyisao:before {
+  content: '\e8b5';
+}
+
+.shequ-shezhi:before {
+  content: '\e8b7';
+}
+
+.shequ-xiaoxi:before {
+  content: '\e817';
+}
+
+.shequ-shequ2:before {
+  content: '\e6c9';
+}
+
+.shequ-yanjing:before {
+  content: '\e6cc';
+}
+
+.shequ-yanjing1:before {
+  content: '\e6cf';
+}
+
+.shequ-wechat-:before {
+  content: '\e621';
+}
+
+.shequ-shequ:before {
+  content: '\e615';
+}
+
+.shequ-jiaoliu-:before {
+  content: '\e616';
+}
+
+.shequ-shequluntan:before {
+  content: '\e617';
+}
+
+.shequ-shequ1:before {
+  content: '\e6ec';
+}
+
+.shequ-dianzan:before {
+  content: '\e601';
+}
+
+.shequ-dianzan2:before {
+  content: '\e602';
+}
+
+.shequ-fenxiang:before {
+  content: '\e603';
+}
+
+.shequ-gengduo:before {
+  content: '\e604';
+}
+
+.shequ-guanbi:before {
+  content: '\e605';
+}
+
+.shequ-lishi:before {
+  content: '\e606';
+}
+
+.shequ-pinglun:before {
+  content: '\e607';
+}
+
+.shequ-shanchu:before {
+  content: '\e608';
+}
+
+.shequ-shipin:before {
+  content: '\e609';
+}
+
+.shequ-shoucang:before {
+  content: '\e60a';
+}
+
+.shequ-shouye:before {
+  content: '\e60b';
+}
+
+.shequ-shouji:before {
+  content: '\e60c';
+}
+
+.shequ-wenda:before {
+  content: '\e60d';
+}
+
+.shequ-wuwangluo:before {
+  content: '\e60e';
+}
+
+.shequ-sousuo:before {
+  content: '\e60f';
+}
+
+.shequ-wode:before {
+  content: '\e610';
+}
+
+.shequ-yanzhengma:before {
+  content: '\e611';
+}
+
+.shequ-youjiantou:before {
+  content: '\e612';
+}
+
+.shequ-yuedu:before {
+  content: '\e613';
+}
+
+.shequ-zuopin:before {
+  content: '\e614';
+}

@@ -1,13 +1,30 @@
 <template>
   <div id="app">
-    <h4>晨博社区</h4>
+    <!-- 路由出口 -->
+    <router-view></router-view>
+
+    <!-- 登录弹出框 -->
+    <Login></Login>
   </div>
 </template>
 
 <script>
+import Login from '@/components/login/Index.vue'
 export default {
   name: 'App',
+  data() {
+    return {}
+  },
+  computed: {},
+  methods: {},
+  components: { Login },
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+.test {
+  width: 300px;
+  height: 100px;
+  background: skyblue;
+}
+</style>
