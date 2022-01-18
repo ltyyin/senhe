@@ -15,30 +15,26 @@ const routes = [
         component: () => import('@/views/home'),
       },
       {
-        path: '/qa/',
+        path: 'qa/',
         name: 'qa',
         component: () => import('@/views/qa'),
       },
       {
-        path: '/video/',
+        path: 'video/',
         name: 'video',
         component: () => import('@/views/video'),
       },
       {
-        path: '/my/',
+        path: 'my/',
         name: 'my',
         component: () => import('@/views/my'),
       },
     ],
   },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login/'),
-  },
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
 })
 

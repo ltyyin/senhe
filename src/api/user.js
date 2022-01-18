@@ -13,26 +13,52 @@ export const sendSms = data => {
   })
 }
 
-export const sendToken = token => {
-  return request({
-    method: 'POST',
-    url: '/user/verifyToken',
-    headers: { Authorization: token },
-  })
-}
-
-export const verifyCode = code => {
-  return request({
-    method: 'POST',
-    url: '/user/verifyCode',
-    data: code,
-  })
-}
-
 export const login = info => {
   return request({
     method: 'POST',
     url: '/auth/login',
     data: info,
+  })
+}
+
+/* 需要token验证，获取登录用户信息 */
+export const getCurrentUser = () => {
+  return request({
+    method: 'GET',
+    url: '/auth/user',
+    // headers: {
+    //   Authorization: `Bearer ${store.state.loginModel.user.token}`,
+    // },
+  })
+}
+
+/* 验证码登录后获取token */
+export const fetchToken = data => {
+  return request({
+    method: 'POST',
+    url: '/auth/token',
+    data,
+  })
+}
+
+/* 短信验证码注册用户 */
+export const verifyCodeRegister = data => {
+  return request({
+    method: 'POST',
+    url: '/users/register',
+    data,
+  })
+}
+
+/**
+ * 获取用户频道列表
+ */
+export const getUserChannels = userID => {
+  return request({
+    method: 'GET',
+    url: '/users/channels',
+    params: {
+      id: userID,
+    },
   })
 }

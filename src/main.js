@@ -10,6 +10,8 @@ import 'vant/lib/index.css'
 import './styles/index.less'
 // 加载图标样式
 import './assets/iconfont/iconfont.css'
+// dayjs 时间处理
+import './utils/dayjs'
 
 // 阻止 vue 在启动时生成生产提示。
 Vue.config.productionTip = false

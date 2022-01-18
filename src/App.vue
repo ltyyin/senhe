@@ -1,30 +1,23 @@
 <template>
-  <div id="app">
-    <!-- 路由出口 -->
-    <router-view></router-view>
+	<div id="app">
+		<!-- 路由出口 -->
+		<router-view></router-view>
 
-    <!-- 登录弹出框 -->
-    <Login></Login>
-  </div>
+		<!-- 登录弹出框 -->
+		<Login></Login>
+	</div>
 </template>
 
 <script>
-import Login from '@/components/login/Index.vue'
+import Login from '@/views/login/Index.vue'
 export default {
-  name: 'App',
-  data() {
-    return {}
-  },
-  computed: {},
-  methods: {},
-  components: { Login },
+	name: 'App',
+	data() {
+		return {}
+	},
+	components: { Login },
 }
 </script>
 
 <style lang="less">
-.test {
-  width: 300px;
-  height: 100px;
-  background: skyblue;
-}
 </style>

@@ -1,17 +1,18 @@
 const path = require('path')
+
 //less文件的路径
-// const myTheme = require(path.join(process.cwd(), '/src/assets/less/vantChange.less'))
+// const myTheme = require(path.join(process.cwd(), './src/assets/less/vantChange.less'))
 const myTheme = path.resolve(__dirname, './src/assets/less/vantChange.less')
 
 module.exports = {
   devServer: {
     proxy: {
-      '/api': {
+      '/webapi/api': {
         target: 'http://localhost:5000',
-        changeOrigin: true,
+        changeOrigin: true, // 允许跨域
         ws: true,
         pathRewrite: {
-          '^/api/': '',
+          '^/webapi/': '',
         },
       },
     },
