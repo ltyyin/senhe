@@ -20,15 +20,15 @@
 		 -->
 		<van-tabs v-model="active" color="#1eddb2" swipeable>
 			<van-tab
-				v-for="channel in channels"
+				v-for="(channel, index) in channels"
 				:title="channel.name"
-				:key="channel.id"
+				:key="index + '-' + channel.id"
 			>
 				<ArticleList :channel="channel"></ArticleList>
 			</van-tab>
 
 			<template #nav-right>
-				<div class="wap-nav-wrap">
+				<div class="wap-nav-wrap" @click="isChannelEditShow = true">
 					<van-icon name="wap-nav" />
 				</div>
 				<!-- 汉堡按钮占位符 -->
@@ -45,14 +45,25 @@
 			close-icon-position="top-left"
 			:style="{ height: '100%' }"
 			get-container="body"
-		/>
+			@closed="closeEdit"
+		>
+			<ChannelEdit
+				:channels="channels"
+				:active="active"
+				:isEdit="isEdit"
+				@close="isChannelEditShow = false"
+				@update-active="active = $event"
+				@switch-is-edit="isEdit = $event"
+			></ChannelEdit>
+		</van-popup>
 	</div>
 </template>
 
 <script>
 import ArticleList from './components/article-list.vue'
-import { getUserChannels } from '@/api/user.js'
+import { getUserChannels } from '@/api/channel.js'
 import { mapMutations, mapState } from 'vuex'
+import ChannelEdit from './components/channel-edit.vue'
 
 export default {
 	name: 'HomeIndex',
@@ -62,17 +73,17 @@ export default {
 			isFetchChannel: true,
 			channels: [],
 			localChannels: [
-				{ id: '1', name: '推荐' },
-				{ id: '2', name: '热门' },
-				{ id: '3', name: '药品' },
-				{ id: '4', name: '汽修' },
-				{ id: '5', name: '公共课部' },
-				{ id: '6', name: '艺术设计' },
-				{ id: '7', name: '机电' },
-				{ id: '8', name: '课程' },
-				{ id: '9', name: '阅读' },
+				{ id: 'ckymfpjrz00392wvnox3csfq0', name: '推荐' },
+				{ id: 'ckymifegx05362wvn34qd0cob', name: '赛事' },
+				{ id: 'ckymig1wh05532wvnjmydu3zc', name: '活动' },
+				{ id: 'ckymhdfeq02462wvntzpr1xkz', name: '师生' },
+				{ id: 'ckymh8bnt01472wvnn5qbegpd', name: '思政' },
+				{ id: 'ckymh7xbg01122wvnbgpp26ks', name: '运动' },
+				{ id: 'ckymfscf200952wvngr2s3jis', name: '阅读' },
+				{ id: 'ckymh8tno01822wvndrgr1af8', name: '跳蚤市场' },
 			],
 			isChannelEditShow: false,
+			isEdit: false,
 		}
 	},
 	computed: {
@@ -81,12 +92,19 @@ export default {
 	},
 	components: {
 		ArticleList,
+		ChannelEdit,
 	},
 	methods: {
 		...mapMutations('articleModel', ['setGetChannels']),
 
+		closeEdit() {
+			if (this.isEdit) {
+				this.isEdit = false
+			}
+		},
+
 		hello() {
-			console.log(this.userInfo.userID)
+			console.log('探索知识的海洋')
 		},
 	},
 	watch: {
@@ -96,10 +114,11 @@ export default {
 				if (newVal) {
 					const { data } = await getUserChannels(this.userInfo.userID)
 					this.channels = data
-					this.channels.unshift(
-						{ id: '1', name: '推荐' },
-						{ id: '2', name: '热门' }
-					)
+
+					this.channels.unshift({
+						id: 'ckymfpjrz00392wvnox3csfq0',
+						name: '推荐',
+					})
 				} else {
 					this.channels = this.localChannels
 				}

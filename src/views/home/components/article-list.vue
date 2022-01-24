@@ -78,8 +78,6 @@ export default {
 
 			this.skip = data.skip
 
-			console.log(data)
-
 			setTimeout(() => {
 				this.articles.unshift(...data.results)
 				/* 关闭刷新的状态 loading */

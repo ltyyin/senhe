@@ -49,16 +49,3 @@ export const verifyCodeRegister = data => {
     data,
   })
 }
-
-/**
- * 获取用户频道列表
- */
-export const getUserChannels = userID => {
-  return request({
-    method: 'GET',
-    url: '/users/channels',
-    params: {
-      id: userID,
-    },
-  })
-}
