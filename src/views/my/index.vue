@@ -10,14 +10,14 @@
 		</van-nav-bar>
 
 		<van-cell-group class="login">
-			<van-cell :title="userInfo.name" center v-if="user">
+			<van-cell :title="userName" center v-if="user">
 				<template #icon>
 					<van-image
 						round
 						width="50"
 						height="50"
 						fit="cover"
-						:src="userInfo.photo"
+						:src="userPhoto"
 					/>
 				</template>
 			</van-cell>
@@ -51,7 +51,6 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import { getCurrentUser } from '@/api/user.js'
 
 export default {
 	name: 'MyIndex',
@@ -60,6 +59,16 @@ export default {
 	},
 	computed: {
 		...mapState('loginModel', ['user', 'userInfo']),
+
+		userName() {
+			if (!this.userInfo) return
+			return this.userInfo.name
+		},
+
+		userPhoto() {
+			if (!this.userInfo) return
+			return this.userInfo.photo
+		},
 	},
 	methods: {
 		...mapMutations('loginModel', [
@@ -77,7 +86,7 @@ export default {
 				.then(() => {
 					// on confirm
 					this.setUser(null)
-					this.setUserInfo({})
+					this.setUserInfo(null)
 				})
 				.catch(() => {
 					// on cancel

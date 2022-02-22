@@ -1,10 +1,11 @@
 <template>
 	<van-cell class="article-item" :title="article.title">
+		<!-- 文章的标题栏 -->
 		<template #title>
-			<div class="title van-multi-ellipsis--l2">
-				{{ article.title }}
-			</div>
+			<div class="title van-multi-ellipsis--l2" v-html="highLightShow()"></div>
 		</template>
+
+		<!-- 文章的内容和封面展示区 -->
 		<template #label>
 			<div class="middle-content">
 				<div class="left">
@@ -17,7 +18,6 @@
 						文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容文章的正式内容
 					</div>
 				</div>
-				<!-- <div class="right"></div> -->
 				<van-image
 					v-if="article.cover"
 					class="right"
@@ -26,6 +26,7 @@
 				/>
 			</div>
 
+			<!-- 文章简介中的评论、点赞、分类的展示 -->
 			<div class="comment">
 				<span>
 					<i class="shequ shequ-dianzan"></i>
@@ -45,9 +46,30 @@
 export default {
 	name: 'ArticleItem',
 	props: {
+		// 文章
 		article: {
 			type: Object,
 			required: true,
+		},
+		// 显示关键词高亮的状态
+		isHighLight: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	methods: {
+		// 针对搜索模块搜索关键词的高亮
+		highLightShow() {
+			const text = this.article.title
+			if (this.isHighLight) {
+				const searchText = this.$store.state.searchModel.searchText
+				return text.replace(
+					new RegExp(searchText, 'ig'),
+					`<span style="color:red;">${searchText}</span>`
+				)
+			} else {
+				return text
+			}
 		},
 	},
 }

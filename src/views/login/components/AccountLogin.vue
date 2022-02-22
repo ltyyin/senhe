@@ -87,7 +87,7 @@ export default {
 
 			/* 节流 */
 			veifyLoginCount: 0,
-			veifyLoginTime: null,
+			veifyLoginTimer: null,
 		}
 	},
 	methods: {
@@ -101,15 +101,16 @@ export default {
 		/*   登录按钮事件，发送请求检查账号密码登录按钮事件，发送请求检查账号密码 */
 		async verifyAccount() {
 			this.veifyLoginCount++
+
 			if (this.veifyLoginCount >= 6) {
-				this.veifyLoginTime && clearTimeout(this.veifyLoginTime)
+				this.veifyLoginTimer && clearTimeout(this.veifyLoginTimer)
 
 				this.$toast({
 					message: '操作频繁，请稍后重试',
 					position: 'top',
 				})
 
-				this.veifyLoginTime = setTimeout((_) => {
+				this.veifyLoginTimer = setTimeout((_) => {
 					this.veifyLoginCount = 0
 				}, 6000)
 
@@ -124,7 +125,7 @@ export default {
 				this.setUser(jwt.data)
 
 				const { data: currentUserInfo } = await getCurrentUser()
-				this.setUserInfo(currentUserInfo.userInfo)
+				this.setUserInfo(currentUserInfo)
 
 				this.$toast.loading({
 					overlay: true,

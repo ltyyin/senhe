@@ -2,12 +2,13 @@
 	<div class="home-container">
 		<!-- navBar -->
 		<van-nav-bar fixed safe-area-inset-top :border="false" placeholder>
-			<template #left>
-				<div class="logo">Logo</div>
+			<template #left @click="iconJump">
+				<div class="logo"></div>
+				<span class="logo-text">学生知识共享</span>
 			</template>
 
 			<template #right>
-				<div class="search-frame" @click="hello">
+				<div class="search-frame" @click="$router.push({ name: 'search' })">
 					<i class="shequ shequ-sousuo"></i>
 					<span>探索知识海洋</span>
 				</div>
@@ -17,8 +18,14 @@
 		<!-- 导航栏 -->
 		<!-- 
 			标签页组件有一个功能，只有你第一次查看标签页的时候才会渲染里面的内容。
+			animated
 		 -->
 		<van-tabs v-model="active" color="#1eddb2" swipeable>
+			<!-- 固定一个推荐频道在程序中 -->
+			<van-tab :title="recommendChannel.name" v-if="channels.length !== 0">
+				<ArticleList :channel="recommendChannel" />
+			</van-tab>
+
 			<van-tab
 				v-for="(channel, index) in channels"
 				:title="channel.name"
@@ -60,10 +67,12 @@
 </template>
 
 <script>
-import ArticleList from './components/article-list.vue'
+import ArticleList from './components/ArticleList.vue'
 import { getUserChannels } from '@/api/channel.js'
 import { mapMutations, mapState } from 'vuex'
-import ChannelEdit from './components/channel-edit.vue'
+import ChannelEdit from './components/ChannelEdit.vue'
+// 引入本地的频道数据
+import { LocalChannelsData, recommendChannel } from './localData/channels'
 
 export default {
 	name: 'HomeIndex',
@@ -72,23 +81,18 @@ export default {
 			active: 0,
 			isFetchChannel: true,
 			channels: [],
-			localChannels: [
-				{ id: 'ckymfpjrz00392wvnox3csfq0', name: '推荐' },
-				{ id: 'ckymifegx05362wvn34qd0cob', name: '赛事' },
-				{ id: 'ckymig1wh05532wvnjmydu3zc', name: '活动' },
-				{ id: 'ckymhdfeq02462wvntzpr1xkz', name: '师生' },
-				{ id: 'ckymh8bnt01472wvnn5qbegpd', name: '思政' },
-				{ id: 'ckymh7xbg01122wvnbgpp26ks', name: '运动' },
-				{ id: 'ckymfscf200952wvngr2s3jis', name: '阅读' },
-				{ id: 'ckymh8tno01822wvndrgr1af8', name: '跳蚤市场' },
-			],
+			localChannels: LocalChannelsData(),
 			isChannelEditShow: false,
 			isEdit: false,
 		}
 	},
 	computed: {
-		...mapState('loginModel', ['userInfo', 'user']),
+		...mapState('loginModel', ['user']),
 		...mapState('articleModel', ['isGetChannels']),
+
+		recommendChannel() {
+			return recommendChannel()
+		},
 	},
 	components: {
 		ArticleList,
@@ -103,22 +107,17 @@ export default {
 			}
 		},
 
-		hello() {
-			console.log('探索知识的海洋')
+		iconJump() {
+			console.log('hi')
 		},
 	},
 	watch: {
 		user: {
 			immediate: true,
-			async handler(newVal) {
-				if (newVal) {
-					const { data } = await getUserChannels(this.userInfo.userID)
+			async handler(val) {
+				if (val) {
+					const { data } = await getUserChannels()
 					this.channels = data
-
-					this.channels.unshift({
-						id: 'ckymfpjrz00392wvnox3csfq0',
-						name: '推荐',
-					})
 				} else {
 					this.channels = this.localChannels
 				}
@@ -129,6 +128,8 @@ export default {
 </script>
 
 <style scoped lang="less">
+@tab-bar-color: #8a9098;
+
 .home-container {
 	background-color: #f2f1f6;
 	/deep/ .van-nav-bar {
@@ -157,20 +158,33 @@ export default {
 
 		.van-nav-bar__left {
 			.logo {
-				margin-left: 20px;
-				font-size: 18px;
-				color: #a1a8b1;
+				width: 30px;
+				height: 30px;
+				background: url('../../assets/logo/logo.png') no-repeat;
+				background-size: cover;
+				margin: 0 10px;
+			}
+
+			.logo-text {
+				color: rgb(124, 124, 124);
+				font-size: 15px;
+			}
+		}
+
+		.van-nav-bar__right {
+			&:active {
+				opacity: initial;
 			}
 		}
 	}
 
-	// /deep/ .van-tabs__nav {
-	// background-color: #f9f9f9;
-	// }
-
 	/deep/ .van-tabs {
 		.van-tab {
-			color: #8a9098;
+			color: @tab-bar-color;
+		}
+
+		.van-tabs__wrap {
+			border-bottom: 2px solid #eeedf1;
 		}
 
 		.van-tab--active {
@@ -184,7 +198,7 @@ export default {
 			background-color: #fff;
 			padding: 0 10px;
 			z-index: 1;
-			color: #8a9098;
+			color: @tab-bar-color;
 			font-size: 18px;
 		}
 		.wap-nav-placeholder {

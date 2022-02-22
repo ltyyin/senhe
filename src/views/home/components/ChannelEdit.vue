@@ -1,5 +1,6 @@
 <template>
-	<div class="channel-edit">
+	<div class="channel-edit-container">
+		<!-- 频道编辑按钮区 -->
 		<div class="channel-edit-title">频道设置</div>
 		<van-cell center :border="false">
 			<template #title>
@@ -18,17 +19,28 @@
 			>
 		</van-cell>
 
-		<van-grid :gutter="10" :border="false">
-			<van-grid-item
-				class="grid-item"
-				:class="{ 'channel-disabled': index === 0 && isEdit }"
+		<!-- 频道编辑 -->
+		<div class="my-channels-wrapper">
+			<div
+				class="channel"
+				:class="{ clearState: isEdit }"
+				@click="isUserChannelClick(recommendChannel, -1)"
+			>
+				<span class="content">推荐</span>
+			</div>
+
+			<div
+				class="channel"
 				v-for="(channel, index) in channels"
 				:key="channel.id"
-				:text="channel.name"
-				:icon="isEdit && index !== 0 ? 'clear' : ''"
 				@click="isUserChannelClick(channel, index)"
-			/>
-		</van-grid>
+			>
+				<span class="content">{{ channel.name }}</span>
+				<span class="clear-icon" v-if="isEdit">
+					<van-icon name="clear" />
+				</span>
+			</div>
+		</div>
 
 		<van-cell center :border="false">
 			<template #title>
@@ -54,8 +66,9 @@
 
 <script>
 import { getAllChannel, addUserChannel, deleteUserChannel } from '@/api/channel'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { setItem } from '@/utils/storage.js'
+import { recommendChannel } from '../localData/channels'
 
 export default {
 	name: 'ChannelEdit',
@@ -81,27 +94,39 @@ export default {
 	computed: {
 		...mapState('loginModel', ['user', 'userInfo']),
 
+		// 推荐频道
+		recommendChannel() {
+			return recommendChannel()
+		},
+
+		// 推荐列表频道
 		recommendChannels() {
-			const result = this.allChannel.filter((channel) => {
+			return this.allChannel.filter((channel) => {
 				return !this.channels.find((item) => {
 					return item.id === channel.id
 				})
 			})
-
-			return result
 		},
 	},
 	methods: {
+		...mapMutations('loginModel', ['switchShowLogin']),
+
 		async onAdd(channel) {
 			this.channels.push(channel)
-
 			// 频道：数据持久化
 			if (this.user) {
-				// 登录了，数据存储到线上
-				await addUserChannel({
-					channelID: channel.id,
-					userID: this.userInfo.userID,
-				})
+				try {
+					// 登录了，数据存储到线上
+					await addUserChannel({
+						channelID: channel.id,
+					})
+				} catch (err) {
+					if (err.response.status === 401) {
+						this.switchShowLogin(true)
+						this.channels.pop(channel)
+						return
+					}
+				}
 			} else {
 				// 没有登录，数据存储到本地
 				// setItem('user-channels', this.channels)
@@ -111,19 +136,16 @@ export default {
 		isUserChannelClick(channel, index) {
 			// 如果isEdit为true则表示进入了编辑状态，进行编辑操作
 			if (this.isEdit) {
+				// 如果删除的是推荐频道，则什么都不做
+				if (index === -1) return
 				this.deleteChannel(channel, index)
 			} else {
 				// 否则就是频道的切换
-				this.switchChannel(channel, index)
+				this.switchChannel(index + 1)
 			}
 		},
 
 		async deleteChannel(channel, index) {
-			// 如果删除的是推荐频道，则什么都不做
-			if (index === 0) {
-				return
-			}
-
 			//如果删除的是当前激活频道之前的频道
 			if (index <= this.active) {
 				// 更新激活批到的索引
@@ -135,17 +157,22 @@ export default {
 			// 频道：数据持久化
 			if (this.user) {
 				// 登录了，数据存储到线上
-				await deleteUserChannel({
-					channelID: channel.id,
-					userID: this.userInfo.userID,
-				})
+				try {
+					await deleteUserChannel(channel.id)
+				} catch (err) {
+					if (err.response.status === 401) {
+						this.switchShowLogin(true)
+						this.channels.splice(index, 0, channel)
+						return
+					}
+				}
 			} else {
 				// 没有登录，数据存储到本地
 				// setItem('user-channels', this.channels)
 			}
 		},
 
-		switchChannel(channel, index) {
+		switchChannel(index) {
 			// 切换频道
 			this.$emit('update-active', index)
 			// 关闭弹出层
@@ -161,8 +188,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.channel-edit {
+.channel-edit-container {
 	// padding-top: 54px;
+	/* 顶部频道设置标签样式*/
 	.channel-edit-title {
 		color: #272829;
 		font-weight: bold;
@@ -170,6 +198,13 @@ export default {
 		border-bottom: 1px solid #efefef;
 		text-align: center;
 	}
+
+	/* 按钮样式*/
+	/deep/ .van-button {
+		width: 50px;
+	}
+
+	/* 我的频道和频道推荐字体栏中的样式*/
 	.channel-title {
 		font-size: 16px;
 		color: #333;
@@ -178,11 +213,10 @@ export default {
 			font-size: 13px;
 		}
 	}
+
+	/* 频道推荐标签栏样式*/
 	.recommend-title {
 		margin-top: 10px;
-	}
-	/deep/ .van-button {
-		width: 50px;
 	}
 
 	.grid-item,
@@ -221,12 +255,37 @@ export default {
 		}
 	}
 
-	.channel-disabled {
-		/deep/ .van-grid-item__content {
-			background-color: #f7f8fa;
-			.van-grid-item__text {
-				color: #c9cacc;
+	/* 我的频道item中的样式*/
+	.my-channels-wrapper {
+		display: flex;
+		flex-wrap: wrap;
+		padding-left: 5px;
+		.channel {
+			background-color: #eef2f5;
+			border-radius: 5px;
+			width: 81px;
+			height: 43px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: #535760;
+			font-size: 15px;
+			position: relative;
+			margin: 10px 5px 0;
+
+			.clear-icon {
+				position: absolute;
+				font-size: 19px;
+				right: -5px;
+				top: -5px;
+				.van-icon {
+					color: #cbccd0;
+				}
 			}
+		}
+		// 清除时的状态
+		.clearState {
+			opacity: 0.6;
 		}
 	}
 }

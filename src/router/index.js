@@ -12,24 +12,29 @@ const routes = [
       {
         path: '', // 默认子路由
         name: 'home',
-        component: () => import('@/views/home'),
+        component: () => import('@/views/home/'),
       },
       {
-        path: 'qa/',
+        path: 'qa',
         name: 'qa',
-        component: () => import('@/views/qa'),
+        component: () => import('@/views/qa/'),
       },
       {
-        path: 'video/',
+        path: 'video',
         name: 'video',
-        component: () => import('@/views/video'),
+        component: () => import('@/views/video/'),
       },
       {
-        path: 'my/',
+        path: 'my',
         name: 'my',
-        component: () => import('@/views/my'),
+        component: () => import('@/views/my/'),
       },
     ],
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import('@/views/search/'),
   },
 ]
 

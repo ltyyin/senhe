@@ -11,8 +11,8 @@ export const loginModel = {
     showVerification: false,
     // 当前登录用户的登录状态(token等数据)
     user: getItem(USER_KEY),
-    userInfo: getItem(USER_INFO),
-    phoneNum: '1350000000',
+    userInfo: null,
+    phoneNum: '',
     // 控制验证码输入框的焦点问题
     codeInputFocus: true,
     /* 显示哪个登录框 */
@@ -52,8 +52,8 @@ export const loginModel = {
     setUser(state, data) {
       state.user = data
 
-      if (data !== null) {
-        // 为了防止页面刷新数据丢失，还需要把数据持久化存储。
+      // 为了防止页面刷新数据丢失，还需要把数据持久化存储。
+      if (!!data) {
         setItem(USER_KEY, data)
       } else {
         removeItem(USER_KEY)
@@ -63,7 +63,6 @@ export const loginModel = {
     /* 用户信息的处理 */
     setUserInfo(state, data) {
       state.userInfo = data
-      setItem(USER_INFO, data)
     },
   },
 

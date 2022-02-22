@@ -1,5 +1,5 @@
 <template>
-	<div class="article-list">
+	<div class="article-list-container">
 		<van-pull-refresh
 			v-model="refreshing"
 			@refresh="onRefresh"
@@ -17,7 +17,6 @@
 					:key="article.id"
 					:article="article"
 				/>
-				<!-- <van-cell v-for="item in articles" :key="item.id" :title="item.title" /> -->
 			</van-list>
 		</van-pull-refresh>
 	</div>
@@ -89,16 +88,20 @@ export default {
 </script>
 
 <style scoped lang="less">
-.article-list {
+.article-list-container {
 	position: fixed;
 	left: 0;
 	right: 0;
-	top: 90px;
+	top: 92px;
 	bottom: 50px;
 	overflow-y: auto;
 	background-color: #f2f1f6;
-	.van-list {
-		min-height: 80vh;
+	/deep/ .van-pull-refresh {
+		overflow: initial;
+
+		.van-list {
+			min-height: 79vh;
+		}
 	}
 }
 </style>

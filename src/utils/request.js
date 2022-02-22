@@ -8,6 +8,7 @@ import store from '@/store/'
 
 const request = axios.create({
   baseURL: 'http://localhost:8080/webapi/api',
+  // baseURL: 'http://4871o44a00.wicp.vip/api',
 })
 
 // 添加请求拦截器

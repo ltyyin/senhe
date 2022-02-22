@@ -6,10 +6,10 @@ import { request } from '@/utils/request'
 /**
  * 获取用户频道列表
  */
-export const getUserChannels = userID => {
+export const getUserChannels = () => {
   return request({
     method: 'GET',
-    url: `/channels/${userID}`,
+    url: `/channels/only`,
   })
 }
 
@@ -17,7 +17,7 @@ export const getUserChannels = userID => {
 export const getAllChannel = () => {
   return request({
     method: 'GET',
-    url: '/channels',
+    url: '/channels/all',
   })
 }
 
@@ -31,10 +31,9 @@ export const addUserChannel = data => {
 }
 
 // 删除一个用户频道
-export const deleteUserChannel = data => {
+export const deleteUserChannel = channelID => {
   return request({
     method: 'DELETE',
-    url: `/channels/${data.channelID}`,
-    data,
+    url: `/channels/${channelID}`,
   })
 }
